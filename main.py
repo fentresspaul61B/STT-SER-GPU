@@ -28,10 +28,9 @@ async def call_api_with_file(url: str, token: str, file: UploadFile):
 
 @app.post("/translate/")
 async def translate(request: Request, file: UploadFile = File(...)):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Bearer token required.")
-    token = auth_header[len("Bearer "):]
+    token = request.headers.get("Authorization")
+
+    print(token)
     start_time = time.time()
     ser_response, stt_response = await asyncio.gather(
         call_api_with_file(SER_URL, token, file),
