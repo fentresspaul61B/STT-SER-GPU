@@ -30,6 +30,10 @@ async def call_api_with_file(url: str, token: str, file: UploadFile):
 async def translate(request: Request, file: UploadFile = File(...)):
     token = request.headers.get("Authorization")
 
+    print("My token")
+
+    print(token)
+
     print(token)
     start_time = time.time()
     ser_response, stt_response = await asyncio.gather(
