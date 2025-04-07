@@ -25,11 +25,17 @@ jobs:
         id: checkout
         uses: 'actions/checkout@v4'
 
-      - name: Google Authentication
-        id: authenticate
+      - name: Google Auth
+        id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-            credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          install_components: beta
 
       - name: Deploy to Cloud Run
         id: deploy
