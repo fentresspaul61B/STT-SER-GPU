@@ -21,15 +21,29 @@ How it works:
 tokens. 
 4. Join and return the responses. 
 
+## Running the API
+The steps to run the API are exactly the same for this API as they are
+for the SER and STT APIs. The instructions to run the API locally without docker, locally with docker, as well as the the deployed API are outlined in detail here: 
+
+### FOLLOW STEPS OUTLINE HERE:
+https://github.com/fentresspaul61B/SER-with-GPU
+
+Caveat: One caveat here is that if you would like to run the API locally use the ```translate_local``` endpoint instead of the ```translate``` endpoint. The reason there are two separate endpoints, is because generating tokens locally and when inside a GCP environment require different processes. 
+
+If you fail to generate valid tokens locally, you likely are not authenticated with the correct GCP service account locally. 
+
+You can use these docs to figure out how to authenticate locally:
+https://cloud.google.com/docs/authentication/gcloud
+
+
 ## Challenges 
 The biggest challenge that I ran into, was how to call a GCP API from inside
 another GCP API. I tried 3 ways of solving this, but only one worked. 
 
 1. ⚠️ Passing the token from the orchestrator API to the two sub APIs: Failed due 
 to permissions issues. 
-2. ⚠️ Generating the token in GCP env by downloading and invoking the CLI. This 
-failed as well, as I struggled to download and utilize the CLI tool from within
-the GCP env. 
+2. ⚠️ Downloading and invoking the GCP CLI. This failed as well, as I struggled to download and utilize the CLI tool from within
+the GCP env. This was also likely redundant as the GCP env is already authenticated with a service account, which is required for deployment.
 3. ✅ Use the Google Auth Python Package: Worked! There is a specific function 
 created for generating tokens while inside a GCP cloud environment. The docs 
 are here: https://googleapis.dev/python/google-auth/latest/user-guide.html#identity-tokens 

@@ -74,3 +74,20 @@ async def translate(request: Request, file: UploadFile = File(...)):
         "ser": ser_response,
         "stt": stt_response
     }
+
+
+@app.post("/translate_local/")
+async def translate_local(request: Request, file: UploadFile = File(...)):
+    """API endpoint, which performs SER and STT at the same time."""
+    start_time = time.time()
+    ser_response, stt_response = await asyncio.gather(
+        call_api_with_audio_file(SER_URL, generate_token(), file),
+        call_api_with_audio_file(STT_URL, generate_token(), file)
+    )
+    end_time = time.time()
+    processing_time = end_time - start_time
+    return {
+        "total_processing_time": processing_time,
+        "ser": ser_response,
+        "stt": stt_response
+    }
