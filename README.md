@@ -21,6 +21,8 @@ How it works:
 tokens. 
 4. Join and return the responses. 
 
+![Alt text](docs/DiagramAPI.png)
+
 ## Running the API
 The steps to run the API are exactly the same for this API as they are
 for the SER and STT APIs. The instructions to run the API locally without docker, locally with docker, as well as the the deployed API are outlined in detail here: 
