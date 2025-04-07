@@ -55,7 +55,6 @@ jobs:
             --cpu 4 \
             --memory 2Gi \
             --timeout 120 \
-            --gpu-type nvidia-l4 \
             --max-instances 1 \
             --quiet 
  
