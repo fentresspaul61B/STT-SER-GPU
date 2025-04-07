@@ -21,9 +21,13 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: 'actions/checkout@v4'
+      - name: Checkout code
+        id: checkout
+        uses: 'actions/checkout@v4'
 
-      - uses: 'google-github-actions/auth@v2'
+      - name: Google Authentication
+        id: authenticate
+        uses: 'google-github-actions/auth@v2'
         with:
             credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
