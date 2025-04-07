@@ -37,5 +37,5 @@ jobs:
         with:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
-          source: .
+          source: . # 
  
