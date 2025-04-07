@@ -2,3 +2,5 @@ fastapi[standard]
 uvicorn
 requests
 python-multipart
+google-auth
+google-api-python-client

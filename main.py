@@ -6,6 +6,8 @@ from configs import SER_URL, STT_URL
 import subprocess
 import tempfile
 import shutil
+import google.auth.transport.requests
+import google.oauth2.id_token
 import requests
 
 app = FastAPI()
@@ -19,12 +21,18 @@ def save_upload_file_to_temp(upload_file: UploadFile) -> str:
     return temp_file_path
 
 
-def generate_token():
-    """Generates GCP identity token for authentication."""
-    command = ["gcloud", "auth", "print-identity-token"]
-    token = subprocess.check_output(command).decode("utf-8").strip()
-    print("GCP identity token generated. ✔️")
-    return token
+def generate_token(url: str):
+    auth_req = google.auth.transport.requests.Request()
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, url)
+    return id_token
+
+
+# def generate_token():
+#     """Generates GCP identity token for authentication."""
+#     command = ["gcloud", "auth", "print-identity-token"]
+#     token = subprocess.check_output(command).decode("utf-8").strip()
+#     print("GCP identity token generated. ✔️")
+#     return token
 
 
 async def call_api_with_file(url: str, token: str, file: UploadFile):
@@ -41,7 +49,7 @@ async def call_api_with_file(url: str, token: str, file: UploadFile):
         print(type(audio_file))
 
         # files = {'file': open(temp_filepath, 'rb')}
-    
+
         response = requests.post(url, headers=headers, files=files)
         print(f"Response Status Code: {response.status_code}")
         print(f"Response Headers: {response.headers}")
@@ -53,13 +61,13 @@ async def call_api_with_file(url: str, token: str, file: UploadFile):
 @app.post("/translate/")
 async def translate(request: Request, file: UploadFile = File(...)):
     # auth_header = request.headers.get("Authorization")
-    
+
     # token = auth_header[len("Bearer "):]
     # print(token)
     start_time = time.time()
     ser_response, stt_response = await asyncio.gather(
-        call_api_with_file(SER_URL, generate_token(), file),
-        call_api_with_file(STT_URL, generate_token(), file)
+        call_api_with_file(SER_URL, generate_token(SER_URL), file),
+        call_api_with_file(STT_URL, generate_token(STT_URL), file)
     )
     end_time = time.time()
     processing_time = end_time - start_time
