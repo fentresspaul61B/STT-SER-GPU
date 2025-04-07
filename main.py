@@ -28,21 +28,26 @@ def generate_token():
 
 
 async def call_api_with_file(url: str, token: str, file: UploadFile):
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
-    files = {
-        "file": (file.filename, await file.read(), 'audio/mpeg')
-    }
+    temp_filepath = save_upload_file_to_temp(file)
 
-    async with httpx.AsyncClient(timeout=60) as client:
-        response = await client.post(url, headers=headers, files=files)
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail=f"Error calling {url}: {response.text}"
-        )
-    return response.json()
+    with open(temp_filepath, "rb") as audio_file:
+        # Create a dictionary of files to be uploaded
+        files = {
+            "file": (temp_filepath.split("/")[-1], audio_file, "audio/mpeg")
+        }
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        print(type(audio_file))
+
+        # files = {'file': open(temp_filepath, 'rb')}
+    
+        response = requests.post(url, headers=headers, files=files)
+        print(f"Response Status Code: {response.status_code}")
+        print(f"Response Headers: {response.headers}")
+        print("made the request")
+        return response.json()
+    return {}
 
 
 @app.post("/translate/")
@@ -81,7 +86,7 @@ async def simple_translate(request: Request, file: UploadFile = File(...)):
 
         # files = {'file': open(temp_filepath, 'rb')}
     
-        response = requests.post(SER_URL, headers=headers, files=files)
+        response = requests.post(STT_URL, headers=headers, files=files)
         print(f"Response Status Code: {response.status_code}")
         print(f"Response Headers: {response.headers}")
         print("made the request")
