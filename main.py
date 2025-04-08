@@ -91,3 +91,8 @@ async def translate_local(request: Request, file: UploadFile = File(...)):
         "ser": ser_response,
         "stt": stt_response
     }
+
+
+@app.post("/warm/")
+async def warm(request: Request):
+    return {"Warm": True}
